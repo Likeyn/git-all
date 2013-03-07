@@ -27,5 +27,5 @@ else
 	exit 1;
 fi;
 
-find $DIR -path "$IGN" -prune -o -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT --no-pager $CMD \;
+find $DIR -path "$IGN" -prune -o -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT $CMD \;
 echo -e "\n";
