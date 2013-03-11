@@ -7,13 +7,7 @@
 DIR='';
 CMD='';
 GIT='git';
-IGN='*_ARCHIVES_*';
-
-# Check if 'git-achievements' exists, and use it
-# @link https://github.com/icefox/git-achievements
-if command -v 'git-achievements' &> /dev/null; then
-	GIT='git-achievements';
-fi;
+IGN=( "*_ARCHIVES_*" "*vendor*" );
 
 # Loop through first bash args to detect dirs
 if [ $# -gt 0 ]; then
@@ -27,5 +21,18 @@ else
 	exit 1;
 fi;
 
-find $DIR -path "$IGN" -prune -o -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT $CMD \;
+
+# Check if 'git-achievements' exists, and use it
+# @link https://github.com/icefox/git-achievements
+if command -v 'git-achievements' &> /dev/null; then GIT='git-achievements'; fi;
+
+# Check if we have multiple folders to ignore
+LEN=${#IGN[@]};
+if [ $LEN -ge 2 ]; then IGNORE="\( -path \"${IGN[0]}\" $(printf -- '-o -path "%s" ' "${IGN[@]:1}")\) -prune -o";
+elif [ $LEN -eq 1 ]; then IGNORE="-path \"${IGN[0]}\" -prune -o";
+else IGNORE=''; fi;
+
+# Execute the command with previously built parameters
+find $DIR $IGNORE -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT $CMD \;
 echo -e "\n";
+echo "find $DIR $IGNORE -type d -name .git -printf \"\n---[\033[1;34m%h\033[0m]---\n\" -execdir $GIT $CMD \;"
