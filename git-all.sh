@@ -21,18 +21,17 @@ else
 	exit 1;
 fi;
 
-
 # Check if 'git-achievements' exists, and use it
 # @link https://github.com/icefox/git-achievements
 if command -v 'git-achievements' &> /dev/null; then GIT='git-achievements'; fi;
 
 # Check if we have multiple folders to ignore
 LEN=${#IGN[@]};
-if [ $LEN -ge 2 ]; then IGNORE="\( -path \"${IGN[0]}\" $(printf -- '-o -path "%s" ' "${IGN[@]:1}")\) -prune -o";
-elif [ $LEN -eq 1 ]; then IGNORE="-path \"${IGN[0]}\" -prune -o";
-else IGNORE=''; fi;
-
-# Execute the command with previously built parameters
-find $DIR $IGNORE -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT $CMD \;
+if [ $LEN -ge 2 ]; then
+	find $DIR \( -path "${IGN[0]}" $(printf -- '-o -path %s ' "${IGN[@]:1}")\) -prune -o -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT $CMD \;
+elif [ $LEN -eq 1 ]; then
+	find $DIR -path "${IGN[0]}" -prune -o -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT $CMD \;
+else
+	find $DIR -type d -name .git -printf "\n---[\033[1;34m%h\033[0m]---\n" -execdir $GIT $CMD \;
+fi;
 echo -e "\n";
-echo "find $DIR $IGNORE -type d -name .git -printf \"\n---[\033[1;34m%h\033[0m]---\n\" -execdir $GIT $CMD \;"
