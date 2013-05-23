@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
+#
 # Bash script that uses find to trigger a git action
 # on all subdirectories that contain a git repository
 # except in folders that matches $IGN pattern
+# @author Likeyn
 
 # Init
 DIR='';
