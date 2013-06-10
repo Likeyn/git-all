@@ -19,7 +19,7 @@ if [ $# -gt 0 ]; then
 	done;
 	CMD=$@;
 else
-	echo "Usage: gall [dir=.] git_command";
+	echo "Usage: git-all [dir=.] git_command";
 	exit 1;
 fi;
 
